@@ -1,0 +1,154 @@
+//
+//  SettingsView.swift
+//  ScreenSnap
+//
+//  Settings window with Glass design
+//
+
+import SwiftUI
+
+struct SettingsView: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        TabView {
+            GeneralSettingsTab()
+                .tabItem {
+                    Label("Général", systemImage: "gear")
+                }
+
+            CaptureSettingsTab()
+                .tabItem {
+                    Label("Capture", systemImage: "camera.fill")
+                }
+
+            StorageSettingsTab()
+                .tabItem {
+                    Label("Stockage", systemImage: "folder.fill")
+                }
+        }
+        .frame(width: 500, height: 400)
+    }
+}
+
+// MARK: - General Settings Tab
+
+struct GeneralSettingsTab: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        Form {
+            Section {
+                Toggle("Copier dans le presse-papiers", isOn: $settings.copyToClipboard)
+                    .help("Copie automatiquement la capture pour pouvoir coller avec ⌘V")
+
+                Toggle("Jouer un son lors de la capture", isOn: $settings.playSoundOnCapture)
+                    .help("Feedback audio lors de chaque capture")
+
+                Toggle("Afficher les dimensions", isOn: $settings.showDimensionsLabel)
+                    .help("Affiche la taille de la sélection en temps réel")
+            } header: {
+                Text("Options générales")
+            }
+
+            Section {
+                Toggle("Activer les annotations", isOn: $settings.enableAnnotations)
+                    .help("Permet d'annoter les captures avant de les sauvegarder")
+            } header: {
+                Text("Fonctionnalités")
+            }
+        }
+        .formStyle(.grouped)
+        .padding()
+    }
+}
+
+// MARK: - Capture Settings Tab
+
+struct CaptureSettingsTab: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        Form {
+            Section {
+                Picker("Format d'image", selection: $settings.imageFormat) {
+                    Text("PNG (sans perte)").tag("png")
+                    Text("JPEG (compressé)").tag("jpeg")
+                }
+                .help("PNG recommandé pour du texte et code, JPEG pour des photos")
+            } header: {
+                Text("Format de fichier")
+            }
+
+            Section {
+                Text("Les raccourcis clavier seront disponibles dans une prochaine version.")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            } header: {
+                Text("Raccourcis clavier")
+            }
+        }
+        .formStyle(.grouped)
+        .padding()
+    }
+}
+
+// MARK: - Storage Settings Tab
+
+struct StorageSettingsTab: View {
+    @EnvironmentObject var settings: AppSettings
+    @State private var showingFolderPicker = false
+
+    var body: some View {
+        Form {
+            Section {
+                Toggle("Enregistrer sur le disque", isOn: $settings.saveToFile)
+                    .help("Sauvegarde les captures dans un dossier")
+
+                if settings.saveToFile {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Dossier de sauvegarde :")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        HStack {
+                            Text(settings.saveFolderPath)
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+
+                            Spacer()
+
+                            Button("Changer...") {
+                                if let newPath = settings.selectFolder() {
+                                    settings.saveFolderPath = newPath
+                                }
+                            }
+                        }
+
+                        HStack {
+                            Button("Ouvrir le dossier") {
+                                NSWorkspace.shared.open(URL(fileURLWithPath: settings.saveFolderPath))
+                            }
+
+                            Button("Vider le dossier") {
+                                settings.clearSaveFolder()
+                            }
+                            .foregroundStyle(.red)
+                        }
+                    }
+                }
+            } header: {
+                Text("Stockage")
+            }
+        }
+        .formStyle(.grouped)
+        .padding()
+    }
+}
+
+#Preview {
+    SettingsView()
+        .environmentObject(AppSettings.shared)
+}
