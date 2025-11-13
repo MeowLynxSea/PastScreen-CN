@@ -27,7 +27,7 @@ struct SettingsView: View {
                     Label("Stockage", systemImage: "folder.fill")
                 }
         }
-        .frame(width: 500, height: 400)
+        .frame(width: 600, height: 500)
     }
 }
 
@@ -47,18 +47,8 @@ struct GeneralSettingsTab: View {
 
                 Toggle("Jouer un son lors de la capture", isOn: $settings.playSoundOnCapture)
                     .help("Feedback audio lors de chaque capture")
-
-                Toggle("Afficher les dimensions", isOn: $settings.showDimensionsLabel)
-                    .help("Affiche la taille de la sélection en temps réel")
             } header: {
                 Text("Options générales")
-            }
-
-            Section {
-                Toggle("Activer les annotations", isOn: $settings.enableAnnotations)
-                    .help("Permet d'annoter les captures avant de les sauvegarder")
-            } header: {
-                Text("Fonctionnalités")
             }
 
             Section {

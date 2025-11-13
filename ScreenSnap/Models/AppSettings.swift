@@ -43,18 +43,6 @@ class AppSettings: ObservableObject {
         }
     }
 
-    @Published var showDimensionsLabel: Bool {
-        didSet {
-            UserDefaults.standard.set(showDimensionsLabel, forKey: "showDimensionsLabel")
-        }
-    }
-
-    @Published var enableAnnotations: Bool {
-        didSet {
-            UserDefaults.standard.set(enableAnnotations, forKey: "enableAnnotations")
-        }
-    }
-
     @Published var globalHotkeyEnabled: Bool {
         didSet {
             UserDefaults.standard.set(globalHotkeyEnabled, forKey: "globalHotkeyEnabled")
@@ -79,8 +67,6 @@ class AppSettings: ObservableObject {
 
         self.imageFormat = UserDefaults.standard.string(forKey: "imageFormat") ?? "png"
         self.playSoundOnCapture = UserDefaults.standard.object(forKey: "playSoundOnCapture") as? Bool ?? true
-        self.showDimensionsLabel = UserDefaults.standard.object(forKey: "showDimensionsLabel") as? Bool ?? true
-        self.enableAnnotations = UserDefaults.standard.object(forKey: "enableAnnotations") as? Bool ?? true
         self.globalHotkeyEnabled = UserDefaults.standard.object(forKey: "globalHotkeyEnabled") as? Bool ?? true
         self.showInDock = UserDefaults.standard.object(forKey: "showInDock") as? Bool ?? true  // Default: show in Dock
 
