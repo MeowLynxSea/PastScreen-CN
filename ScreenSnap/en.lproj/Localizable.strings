@@ -94,3 +94,21 @@
 "notification.screenshot_saved" = "Screenshot saved to clipboard";
 "notification.reveal_in_finder" = "Reveal in Finder";
 "notification.dismiss" = "Dismiss";
+
+/* Onboarding */
+"onboarding.subtitle" = "Screenshots for Developers";
+"onboarding.button.previous" = "Previous";
+"onboarding.button.next" = "Next";
+"onboarding.button.start" = "Get Started";
+
+"onboarding.page1.title" = "Ultra Fast";
+"onboarding.page1.description" = "Capture and paste in seconds.\n⌘⇧5 → Capture → ⌘V in your IDE";
+
+"onboarding.page2.title" = "Auto Cleanup";
+"onboarding.page2.description" = "All captures automatically deleted on reboot.\nNo more cluttered folders!";
+
+"onboarding.page3.title" = "Direct Clipboard";
+"onboarding.page3.description" = "Automatic clipboard copy.\nPerfect for Cursor, VSCode, Zed.";
+
+"onboarding.page4.title" = "Customizable";
+"onboarding.page4.description" = "Shortcuts, formats, folders...\nEverything configurable from the menu bar.";

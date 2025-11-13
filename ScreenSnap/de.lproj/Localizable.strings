@@ -94,3 +94,21 @@
 "notification.screenshot_saved" = "Screenshot in Zwischenablage gespeichert";
 "notification.reveal_in_finder" = "Im Finder anzeigen";
 "notification.dismiss" = "Schließen";
+
+/* Onboarding */
+"onboarding.subtitle" = "Screenshots für Entwickler";
+"onboarding.button.previous" = "Zurück";
+"onboarding.button.next" = "Weiter";
+"onboarding.button.start" = "Los geht's";
+
+"onboarding.page1.title" = "Ultra Schnell";
+"onboarding.page1.description" = "Erfassen und einfügen in Sekunden.\n⌘⇧5 → Erfassen → ⌘V in Ihrer IDE";
+
+"onboarding.page2.title" = "Auto-Bereinigung";
+"onboarding.page2.description" = "Alle Aufnahmen werden beim Neustart automatisch gelöscht.\nKeine überfüllten Ordner mehr!";
+
+"onboarding.page3.title" = "Direkte Zwischenablage";
+"onboarding.page3.description" = "Automatisches Kopieren in die Zwischenablage.\nPerfekt für Cursor, VSCode, Zed.";
+
+"onboarding.page4.title" = "Anpassbar";
+"onboarding.page4.description" = "Tastenkürzel, Formate, Ordner...\nAlles über die Menüleiste konfigurierbar.";

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.1</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>NSScreenCaptureUsageDescription</key>
 	<string>ScreenSnap nécessite l'accès à la capture d'écran pour prendre des screenshots.</string>
 	<key>NSAppleEventsUsageDescription</key>

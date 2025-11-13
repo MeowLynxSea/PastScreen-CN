@@ -94,3 +94,21 @@
 "notification.screenshot_saved" = "Capture d'écran enregistrée dans le presse-papiers";
 "notification.reveal_in_finder" = "Révéler dans le Finder";
 "notification.dismiss" = "Ignorer";
+
+/* Onboarding */
+"onboarding.subtitle" = "Captures d'écran pour développeurs";
+"onboarding.button.previous" = "Précédent";
+"onboarding.button.next" = "Suivant";
+"onboarding.button.start" = "Commencer";
+
+"onboarding.page1.title" = "Ultra Rapide";
+"onboarding.page1.description" = "Capturez et collez en quelques secondes.\n⌘⇧5 → Capturer → ⌘V dans votre IDE";
+
+"onboarding.page2.title" = "Nettoyage Auto";
+"onboarding.page2.description" = "Toutes vos captures sont automatiquement effacées au redémarrage.\nFini les dossiers qui débordent!";
+
+"onboarding.page3.title" = "Clipboard Direct";
+"onboarding.page3.description" = "Copie automatique dans le presse-papiers.\nParfait pour Cursor, VSCode, Zed.";
+
+"onboarding.page4.title" = "Personnalisable";
+"onboarding.page4.description" = "Raccourcis, formats, dossiers...\nTout est configurable depuis la barre de menu.";

@@ -94,3 +94,21 @@
 "notification.screenshot_saved" = "Screenshot salvato negli appunti";
 "notification.reveal_in_finder" = "Mostra nel Finder";
 "notification.dismiss" = "Chiudi";
+
+/* Onboarding */
+"onboarding.subtitle" = "Screenshot per sviluppatori";
+"onboarding.button.previous" = "Precedente";
+"onboarding.button.next" = "Successivo";
+"onboarding.button.start" = "Inizia";
+
+"onboarding.page1.title" = "Ultra Veloce";
+"onboarding.page1.description" = "Cattura e incolla in pochi secondi.\n⌘⇧5 → Cattura → ⌘V nel tuo IDE";
+
+"onboarding.page2.title" = "Pulizia Automatica";
+"onboarding.page2.description" = "Tutte le catture vengono eliminate automaticamente al riavvio.\nBasta cartelle piene!";
+
+"onboarding.page3.title" = "Appunti Diretti";
+"onboarding.page3.description" = "Copia automatica negli appunti.\nPerfetto per Cursor, VSCode, Zed.";
+
+"onboarding.page4.title" = "Personalizzabile";
+"onboarding.page4.description" = "Scorciatoie, formati, cartelle...\nTutto configurabile dalla barra dei menu.";

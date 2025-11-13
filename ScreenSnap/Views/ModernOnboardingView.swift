@@ -27,26 +27,26 @@ struct ModernOnboardingView: View {
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             icon: "bolt.fill",
-            title: "Ultra Rapide",
-            description: "Capturez et collez en quelques secondes.\n⌘⇧5 → Capturer → ⌘V dans votre IDE",
+            title: NSLocalizedString("onboarding.page1.title", comment: "Onboarding page 1 title"),
+            description: NSLocalizedString("onboarding.page1.description", comment: "Onboarding page 1 description"),
             accentColor: .yellow
         ),
         OnboardingPage(
             icon: "sparkles",
-            title: "Nettoyage Auto",
-            description: "Toutes vos captures sont automatiquement effacées au redémarrage.\nFini les dossiers qui débordent!",
+            title: NSLocalizedString("onboarding.page2.title", comment: "Onboarding page 2 title"),
+            description: NSLocalizedString("onboarding.page2.description", comment: "Onboarding page 2 description"),
             accentColor: .purple
         ),
         OnboardingPage(
             icon: "clipboard.fill",
-            title: "Clipboard Direct",
-            description: "Copie automatique dans le presse-papiers.\nParfait pour Cursor, VSCode, Zed.",
+            title: NSLocalizedString("onboarding.page3.title", comment: "Onboarding page 3 title"),
+            description: NSLocalizedString("onboarding.page3.description", comment: "Onboarding page 3 description"),
             accentColor: .blue
         ),
         OnboardingPage(
             icon: "gearshape.fill",
-            title: "Personnalisable",
-            description: "Raccourcis, formats, dossiers...\nTout est configurable depuis la barre de menu.",
+            title: NSLocalizedString("onboarding.page4.title", comment: "Onboarding page 4 title"),
+            description: NSLocalizedString("onboarding.page4.description", comment: "Onboarding page 4 description"),
             accentColor: .green
         )
     ]
@@ -71,7 +71,7 @@ struct ModernOnboardingView: View {
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
 
-                        Text("Captures d'écran pour développeurs")
+                        Text(NSLocalizedString("onboarding.subtitle", comment: "Onboarding subtitle"))
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(.secondary)
                     }
@@ -113,7 +113,7 @@ struct ModernOnboardingView: View {
                                 currentPage -= 1
                             }
                         }) {
-                            Text("Précédent")
+                            Text(NSLocalizedString("onboarding.button.previous", comment: "Previous button"))
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(.secondary)
                                 .frame(width: 120, height: 44)
@@ -138,7 +138,7 @@ struct ModernOnboardingView: View {
                         }
                     }) {
                         HStack(spacing: 8) {
-                            Text(currentPage < pages.count - 1 ? "Suivant" : "Commencer")
+                            Text(currentPage < pages.count - 1 ? NSLocalizedString("onboarding.button.next", comment: "Next button") : NSLocalizedString("onboarding.button.start", comment: "Start button"))
                                 .font(.system(size: 15, weight: .semibold))
 
                             if currentPage == pages.count - 1 {
