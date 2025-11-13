@@ -67,7 +67,7 @@
 "onboarding.workflow.note" = "Capturer → Coller → Continuer à coder";
 "onboarding.customizable" = "⚙️ Personnalisable";
 "onboarding.customizable.desc" = "Configurez tout : raccourcis, formats, stockage";
-"onboarding.vs_native" = "Contrairement à la capture native macOS (⌘⇧5) : Pas de délai d'aperçu, presse-papiers direct";
+"onboarding.vs_native" = "Contrairement à la capture native macOS (⌥⌘S) : Pas de délai d'aperçu, presse-papiers direct";
 "onboarding.vs_other" = "Contrairement aux autres outils : Pas de workflows complexes ou gestion de fichiers";
 "onboarding.dont_show" = "Ne plus afficher ce message";
 "onboarding.got_it" = "Compris, c'est parti !";
@@ -102,7 +102,7 @@
 "onboarding.button.start" = "Commencer";
 
 "onboarding.page1.title" = "Ultra Rapide";
-"onboarding.page1.description" = "Capturez et collez en quelques secondes.\n⌘⇧5 → Capturer → ⌘V dans votre IDE";
+"onboarding.page1.description" = "Capturez et collez en quelques secondes.\n⌥⌘S → Capturer → ⌘V dans votre IDE";
 
 "onboarding.page2.title" = "Nettoyage Auto";
 "onboarding.page2.description" = "Toutes vos captures sont automatiquement effacées au redémarrage.\nFini les dossiers qui débordent!";

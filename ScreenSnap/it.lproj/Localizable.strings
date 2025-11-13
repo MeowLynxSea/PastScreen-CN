@@ -67,7 +67,7 @@
 "onboarding.workflow.note" = "Cattura → Incolla → Continua a programmare";
 "onboarding.customizable" = "⚙️ Personalizzabile";
 "onboarding.customizable.desc" = "Configura tutto: scorciatoie, formati, archiviazione";
-"onboarding.vs_native" = "A differenza dello screenshot nativo di macOS (⌘⇧5): Nessun ritardo nell'anteprima, appunti diretti";
+"onboarding.vs_native" = "A differenza dello screenshot nativo di macOS (⌥⌘S): Nessun ritardo nell'anteprima, appunti diretti";
 "onboarding.vs_other" = "A differenza di altri strumenti: Nessun flusso di lavoro complesso o gestione di file";
 "onboarding.dont_show" = "Non mostrare più questo messaggio";
 "onboarding.got_it" = "Capito, andiamo!";
@@ -102,7 +102,7 @@
 "onboarding.button.start" = "Inizia";
 
 "onboarding.page1.title" = "Ultra Veloce";
-"onboarding.page1.description" = "Cattura e incolla in pochi secondi.\n⌘⇧5 → Cattura → ⌘V nel tuo IDE";
+"onboarding.page1.description" = "Cattura e incolla in pochi secondi.\n⌥⌘S → Cattura → ⌘V nel tuo IDE";
 
 "onboarding.page2.title" = "Pulizia Automatica";
 "onboarding.page2.description" = "Tutte le catture vengono eliminate automaticamente al riavvio.\nBasta cartelle piene!";

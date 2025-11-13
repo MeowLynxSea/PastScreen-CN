@@ -67,7 +67,7 @@
 "onboarding.workflow.note" = "Capturar → Pegar → Seguir programando";
 "onboarding.customizable" = "⚙️ Personalizable";
 "onboarding.customizable.desc" = "Configura todo: atajos, formatos, almacenamiento";
-"onboarding.vs_native" = "A diferencia de la captura nativa de macOS (⌘⇧5): Sin demora de vista previa, portapapeles directo";
+"onboarding.vs_native" = "A diferencia de la captura nativa de macOS (⌥⌘S): Sin demora de vista previa, portapapeles directo";
 "onboarding.vs_other" = "A diferencia de otras herramientas: Sin flujos de trabajo complejos ni gestión de archivos";
 "onboarding.dont_show" = "No mostrar esto de nuevo";
 "onboarding.got_it" = "¡Entendido, vamos!";
@@ -102,7 +102,7 @@
 "onboarding.button.start" = "Comenzar";
 
 "onboarding.page1.title" = "Ultra Rápido";
-"onboarding.page1.description" = "Captura y pega en segundos.\n⌘⇧5 → Capturar → ⌘V en tu IDE";
+"onboarding.page1.description" = "Captura y pega en segundos.\n⌥⌘S → Capturar → ⌘V en tu IDE";
 
 "onboarding.page2.title" = "Limpieza Automática";
 "onboarding.page2.description" = "Todas las capturas se eliminan automáticamente al reiniciar.\n¡No más carpetas desbordadas!";

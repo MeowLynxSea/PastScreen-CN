@@ -67,7 +67,7 @@
 "onboarding.workflow.note" = "Aufnehmen → Einfügen → Weiter programmieren";
 "onboarding.customizable" = "⚙️ Anpassbar";
 "onboarding.customizable.desc" = "Alles konfigurieren: Tastaturkürzel, Formate, Speicher";
-"onboarding.vs_native" = "Im Gegensatz zum nativen macOS-Screenshot (⌘⇧5): Keine Vorschauverzögerung, direkte Zwischenablage";
+"onboarding.vs_native" = "Im Gegensatz zum nativen macOS-Screenshot (⌥⌘S): Keine Vorschauverzögerung, direkte Zwischenablage";
 "onboarding.vs_other" = "Im Gegensatz zu anderen Tools: Keine komplexen Workflows oder Dateiverwaltung";
 "onboarding.dont_show" = "Dies nicht mehr anzeigen";
 "onboarding.got_it" = "Verstanden, los geht's!";
@@ -102,7 +102,7 @@
 "onboarding.button.start" = "Los geht's";
 
 "onboarding.page1.title" = "Ultra Schnell";
-"onboarding.page1.description" = "Erfassen und einfügen in Sekunden.\n⌘⇧5 → Erfassen → ⌘V in Ihrer IDE";
+"onboarding.page1.description" = "Erfassen und einfügen in Sekunden.\n⌥⌘S → Erfassen → ⌘V in Ihrer IDE";
 
 "onboarding.page2.title" = "Auto-Bereinigung";
 "onboarding.page2.description" = "Alle Aufnahmen werden beim Neustart automatisch gelöscht.\nKeine überfüllten Ordner mehr!";

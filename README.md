@@ -20,7 +20,7 @@ macOS app with optimized workflow: Capture → ⌘V → Paste into your IDE!
 
 - 📸 **Area Capture** : Interactive selection with translucent overlay
 - 🖥️ **Full Screen Capture** : One click to capture everything
-- ⚡ **Ultra-fast** : ⌘⇧5 → Capture → ⌘V → Pasted!
+- ⚡ **Ultra-fast** : ⌥⌘S → Capture → ⌘V → Pasted!
 - 📋 **Auto-copy** : Direct to clipboard for your IDEs
 - 🧹 **Auto-cleanup** : Temp files cleared on reboot
 - 🔔 **Notifications** : Click to open in Finder
@@ -52,12 +52,12 @@ Then: `Product → Archive → Export`
 
 ### Keyboard Shortcuts
 
-- **⌘⇧5** : Capture area (default shortcut)
+- **⌥⌘S** : Capture area (default shortcut)
 - **Click menu bar icon** : Open full menu
 
 ### Menu Bar
 
-- 📸 Capture Area ⌘⇧5
+- 📸 Capture Area ⌥⌘S
 - 🖥️ Capture Full Screen
 - 📁 Show Last Screenshot
 - ⚙️ Preferences...
@@ -66,7 +66,7 @@ Then: `Product → Archive → Export`
 ### Developer Workflow
 
 ```
-1. ⌘⇧5 (or click menu bar)
+1. ⌥⌘S (or click menu bar)
 2. Select the area to capture
 3. ⌘V in Cursor/VSCode/Zed
    → Image pasted directly!
@@ -87,7 +87,7 @@ Then: `Product → Archive → Export`
 
 ### Capture Tab
 - 🖼️ **Format** : PNG (lossless) or JPEG (compressed)
-- ⌨️ **Shortcut** : Customizable (default ⌘⇧5)
+- ⌨️ **Shortcut** : Customizable (default ⌥⌘S)
 - 🎹 Enable global shortcut
 
 ### Storage Tab
@@ -184,7 +184,7 @@ create-dmg \
 **How?** System Settings → Privacy & Security → Screen Recording → ✅ ScreenSnap
 
 ### Accessibility
-**Why?** For global keyboard shortcut ⌘⇧5
+**Why?** For global keyboard shortcut ⌥⌘S
 
 **How?** System Settings → Privacy & Security → Accessibility → ✅ ScreenSnap
 
@@ -211,7 +211,7 @@ create-dmg \
 
 ```
 Problem: Capture bug → Find file → Send it
-Solution: ⌘⇧5 → ⌘V → Already pasted in Slack!
+Solution: ⌥⌘S → ⌘V → Already pasted in Slack!
 
 Problem: Screenshots everywhere on Desktop
 Solution: Auto-cleanup on reboot → Always clean Desktop
