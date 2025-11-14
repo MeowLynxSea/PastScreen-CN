@@ -194,6 +194,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             print("❌ Service de capture d'écran non initialisé")
             return
         }
+        // Capture the active app BEFORE showing selection window (when called from menu bar)
+        screenshotService.capturePreviousApp()
         screenshotService.captureScreenshot()
     }
 
@@ -202,6 +204,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             print("❌ Service de capture d'écran non initialisé")
             return
         }
+        // Capture the active app BEFORE fullscreen capture
+        screenshotService.capturePreviousApp()
         // Use the same ScreenshotService but capture full screen
         screenshotService.captureFullScreen()
     }
@@ -448,7 +452,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             if isCorrectModifiers && isS {
                 print("🎯 [HOTKEY] Raccourci ⌥⌘S détecté!")
                 print("   keyCode: \(event.keyCode), characters: \(event.characters ?? "nil")")
-                self?.takeScreenshot()
+
+                // IMPORTANT: Capture l'app IMMÉDIATEMENT avant que ScreenSnap devienne actif
+                self?.screenshotService?.capturePreviousApp()
+
+                // Petit délai pour laisser capturePreviousApp() s'exécuter
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self?.screenshotService?.captureScreenshot()
+                }
             }
         }
 

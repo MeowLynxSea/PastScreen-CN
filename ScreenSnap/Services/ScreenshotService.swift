@@ -12,8 +12,67 @@ import SwiftUI
 import UserNotifications
 import ScreenCaptureKit
 
+// MARK: - App Category Detection
+
+enum AppCategory {
+    case codeEditor
+    case webBrowser
+    case designTool
+    case unknown
+}
+
 class ScreenshotService: NSObject {
     private var captureTask: Process?
+    private var previousApp: NSRunningApplication? // Store app that was active before capture
+
+    // Bundle IDs of known applications
+    private let appCategoryMap: [String: AppCategory] = [
+        // Code Editors
+        "com.microsoft.VSCode": .codeEditor,
+        "com.microsoft.VSCodeInsiders": .codeEditor,
+        "dev.zed.Zed": .codeEditor,
+        "com.todesktop.230313mzl4w4u92": .codeEditor, // Cursor
+        "com.sublimetext.4": .codeEditor,
+        "com.apple.dt.Xcode": .codeEditor,
+        "com.jetbrains.intellij": .codeEditor,
+        "com.jetbrains.pycharm": .codeEditor,
+        "com.github.atom": .codeEditor,
+        "com.uranusjr.macdown": .codeEditor,
+        "abnerworks.Typora": .codeEditor,
+        "md.obsidian": .codeEditor,
+
+        // Web Browsers
+        "com.apple.Safari": .webBrowser,
+        "com.apple.SafariTechnologyPreview": .webBrowser,
+        "com.google.Chrome": .webBrowser,
+        "com.google.Chrome.canary": .webBrowser,
+        "org.mozilla.firefox": .webBrowser,
+        "org.mozilla.firefoxdeveloperedition": .webBrowser,
+        "com.microsoft.edgemac": .webBrowser,
+        "com.microsoft.edgemac.Dev": .webBrowser,
+        "com.brave.Browser": .webBrowser,
+        "com.brave.Browser.dev": .webBrowser,
+        "com.operasoftware.Opera": .webBrowser,
+        "com.operasoftware.OperaGX": .webBrowser,
+        "company.thebrowser.Browser": .webBrowser, // Arc
+        "company.thebrowser.dia": .webBrowser, // DIA
+        "com.vivaldi.Vivaldi": .webBrowser,
+        "org.chromium.Chromium": .webBrowser,
+        "com.kagi.kagimacOS": .webBrowser, // Orion
+        "com.pushplaylabs.Sidekick": .webBrowser,
+        "com.maxthon.mac.Maxthon": .webBrowser,
+
+        // Design & Communication Tools
+        "com.figma.Desktop": .designTool,
+        "com.tinyspeck.slackmacgap": .designTool,
+        "com.hnc.Discord": .designTool,
+        "com.linear": .designTool,
+        "notion.id": .designTool,
+        "com.sketch.app": .designTool,
+        "com.bohemiancoding.sketch3": .designTool,
+        "com.adobe.PhotoshopCC": .designTool,
+        "com.framerx.Framer": .designTool
+    ]
 
     override init() {
         super.init()
@@ -118,11 +177,16 @@ class ScreenshotService: NSObject {
 
         print("✅ [SERVICE] Capture réussie: \(filePath)")
 
-        // Copier le PATH du fichier au clipboard (comme cc-screenshot.sh)
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(filePath, forType: .string)
-        print("📋 [SERVICE] Chemin copié au clipboard: \(filePath)")
+        // Load image and use smart clipboard detection
+        if let image = NSImage(contentsOfFile: filePath) {
+            copyToClipboard(image: image)
+        } else {
+            // Fallback: copy path if image load fails
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(filePath, forType: .string)
+            print("⚠️ [SERVICE] Failed to load image, copying path instead")
+        }
 
         // Jouer le son "Glass" (comme dans le script bash)
         if AppSettings.shared.playSoundOnCapture {
@@ -404,10 +468,120 @@ class ScreenshotService: NSObject {
         }
     }
 
+    // MARK: - Smart Clipboard Detection
+
+    /// Capture the frontmost application BEFORE showing selection window
+    func capturePreviousApp() {
+        // Get the app that is currently active (before ScreenSnap becomes active)
+        previousApp = NSWorkspace.shared.frontmostApplication
+        if let app = previousApp, let bundleID = app.bundleIdentifier {
+            let category = appCategoryMap[bundleID] ?? .unknown
+            print("📱 [DETECTION] Captured previous app: \(app.localizedName ?? "Unknown")")
+            print("   Bundle ID: \(bundleID)")
+            print("   Category: \(category)")
+
+            // If unknown, suggest adding it
+            if category == .unknown {
+                print("⚠️ [DETECTION] Unknown app! Add this bundle ID to appCategoryMap:")
+                print("   \"\(bundleID)\": .webBrowser  // or .codeEditor or .designTool")
+            }
+        } else {
+            print("⚠️ [DETECTION] Could not detect previous app")
+        }
+    }
+
+    /// Detect the application category based on previously captured app
+    private func detectFrontmostApp() -> AppCategory {
+        guard let app = previousApp,
+              let bundleID = app.bundleIdentifier else {
+            print("⚠️ [CLIPBOARD] No previous app detected, using default behavior")
+            return .unknown
+        }
+
+        let category = appCategoryMap[bundleID] ?? .unknown
+        print("📱 [CLIPBOARD] Using previous app: \(app.localizedName ?? "Unknown") (\(bundleID)) → \(category)")
+        return category
+    }
+
+    /// Copy image to clipboard with smart format detection
     private func copyToClipboard(image: NSImage) {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        pasteboard.writeObjects([image])
+
+        let appCategory = detectFrontmostApp()
+
+        switch appCategory {
+        case .codeEditor:
+            // Code editors prefer file paths for Markdown linking
+            if let imagePath = saveToFileAndGetPath(image: image) {
+                pasteboard.setString(imagePath, forType: .string)
+                print("✅ [CLIPBOARD] File path copied for code editor: \(imagePath)")
+            } else {
+                // Fallback: write image if file save fails
+                pasteboard.writeObjects([image])
+                print("⚠️ [CLIPBOARD] File save failed, copied image data instead")
+            }
+
+        case .webBrowser, .designTool:
+            // Browsers and design tools need actual image data
+            pasteboard.writeObjects([image])
+            print("✅ [CLIPBOARD] Image data copied for browser/design tool")
+
+        case .unknown:
+            // Unknown apps: write BOTH formats for maximum compatibility
+            pasteboard.writeObjects([image])
+            if let imagePath = saveToFileAndGetPath(image: image) {
+                pasteboard.setString(imagePath, forType: .string)
+                print("✅ [CLIPBOARD] Both image data AND file path copied (unknown app)")
+            } else {
+                print("✅ [CLIPBOARD] Image data copied (file save failed)")
+            }
+        }
+    }
+
+    /// Save image to file and return the path (for file path clipboard)
+    private func saveToFileAndGetPath(image: NSImage) -> String? {
+        guard let tiffData = image.tiffRepresentation,
+              let bitmapImage = NSBitmapImageRep(data: tiffData) else {
+            return nil
+        }
+
+        let fileType: NSBitmapImageRep.FileType
+        let fileExtension: String
+
+        switch AppSettings.shared.imageFormat {
+        case "jpeg":
+            fileType = .jpeg
+            fileExtension = "jpg"
+        default:
+            fileType = .png
+            fileExtension = "png"
+        }
+
+        guard let data = bitmapImage.representation(using: fileType, properties: [:]) else {
+            return nil
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+        let timestamp = dateFormatter.string(from: Date())
+        let filename = "Screenshot-\(timestamp).\(fileExtension)"
+
+        let savePath: String
+        if AppSettings.shared.saveFolderPath.isEmpty || AppSettings.shared.saveFolderPath == NSHomeDirectory() + "/Desktop/" {
+            savePath = NSTemporaryDirectory() + filename
+        } else {
+            AppSettings.shared.ensureFolderExists()
+            savePath = AppSettings.shared.saveFolderPath + filename
+        }
+
+        do {
+            try data.write(to: URL(fileURLWithPath: savePath))
+            return savePath
+        } catch {
+            print("❌ [CLIPBOARD] Failed to save file: \(error)")
+            return nil
+        }
     }
 
     private func saveToFile(image: NSImage) {

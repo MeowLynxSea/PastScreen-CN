@@ -4,20 +4,22 @@
 
 macOS app with optimized workflow: Capture → ⌘V → Paste into your IDE!
 
-[![Version](https://img.shields.io/badge/version-1.1-blue.svg)](https://github.com/augiefra/ScreenSnap/releases/tag/v1.1)
+[![Version](https://img.shields.io/badge/version-1.2-blue.svg)](https://github.com/augiefra/ScreenSnap/releases/tag/v1.2)
 [![Platform](https://img.shields.io/badge/platform-macOS%2013.0%2B-lightgrey.svg)](https://www.apple.com/macos)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## ✨ What's New in v1.1
+## ✨ What's New in v1.2
 
-- 🎨 **Modern Onboarding** : Liquid glass interface with 4 animated pages
-- 🌍 **Multilingual** : Full support for FR/EN/ES/DE/IT
-- 🖼️ **Dock Toggle** : Choose to show or hide the Dock icon
-- 📐 **Improved Preferences** : Larger and optimized interface
-- 🧹 **Cleanup** : Removed non-functional settings
+- 🧠 **Smart Clipboard** : Automatically detects your app and adapts clipboard format
+  - **Code Editors** (VSCode, Zed, Cursor) → File path for Markdown `![](path)`
+  - **Web Browsers** (Chrome, Safari, Arc, DIA) → Image data for direct paste
+  - **Design Tools** (Figma, Slack, Discord) → Image data
+- 🎯 **30+ Apps Supported** : Intelligent detection for all major browsers and editors
+- ⚡ **Perfect Workflow** : Paste screenshots exactly how each app expects them
 
 ## 🚀 Features
 
+- 🧠 **Smart Clipboard** : Auto-detects your app (browsers get images, editors get paths)
 - 📸 **Area Capture** : Interactive selection with translucent overlay
 - 🖥️ **Full Screen Capture** : One click to capture everything
 - ⚡ **Ultra-fast** : ⌥⌘S → Capture → ⌘V → Pasted!
@@ -73,9 +75,37 @@ Then: `Product → Archive → Export`
 ```
 
 **Perfect for:**
-- Pasting screenshots into Claude Code, Cursor, Zed, VSCode
-- Sharing bugs on Slack, Discord, Linear, GitHub Issues
-- Documenting in Figma, Notion, Obsidian
+- Pasting screenshots into Claude Code, Cursor, Zed, VSCode (as Markdown paths)
+- Sharing bugs on Slack, Discord, Linear, GitHub Issues (as images)
+- Documenting in Figma, Notion, Obsidian (as images)
+
+### 🧠 Smart Clipboard Detection
+
+ScreenSnap automatically detects which app you're using and adapts the clipboard format:
+
+**Code Editors** → File Path (for Markdown linking)
+- VSCode, VSCode Insiders
+- Zed
+- Cursor
+- Sublime Text
+- Xcode
+- IntelliJ, PyCharm
+- Obsidian, Typora, MacDown
+
+**Web Browsers** → Image Data (for direct paste)
+- Safari, Safari Technology Preview
+- Chrome, Chrome Canary
+- Firefox, Firefox Developer Edition
+- Edge, Edge Dev
+- Brave, Brave Dev
+- Arc, DIA
+- Vivaldi, Chromium, Orion
+
+**Design & Communication** → Image Data
+- Figma, Sketch, Photoshop, Framer
+- Slack, Discord, Linear, Notion
+
+**Unknown Apps** → Both formats for maximum compatibility
 
 ## ⚙️ Configuration
 
@@ -248,29 +278,41 @@ MIT License - See [LICENSE](LICENSE)
 - **Issues** : [GitHub Issues](https://github.com/augiefra/ScreenSnap/issues)
 - **Changelog** : See releases for complete history
 
-## 🎉 Changelog v1.1
+## 🎉 Changelog
 
-### Added
+### v1.2 - Smart Clipboard (2025-01-14)
+
+**Added**
+- 🧠 **Smart Clipboard Detection** : Automatically adapts clipboard format based on active app
+  - Code editors receive file paths for Markdown linking
+  - Web browsers receive image data for direct paste
+  - Design tools receive image data
+- 🎯 **30+ App Support** : Intelligent detection for VSCode, Zed, Cursor, Chrome, Safari, Arc, DIA, Figma, Slack, and more
+- 🔍 **Fallback Strategy** : Unknown apps receive both formats for maximum compatibility
+
+**Technical**
+- App category detection using `NSWorkspace.shared.frontmostApplication`
+- Smart pasteboard format selection (`.string` vs `.tiff/.png`)
+- Hotkey timing optimization for accurate app detection
+- Bundle ID mapping for 30+ popular applications
+
+### v1.1 - Modern Interface (2025-01-13)
+
+**Added**
 - ✨ Modern onboarding with liquid glass effect and 4 animated pages
 - 🌍 Complete multilingual support (FR/EN/ES/DE/IT)
 - 🖼️ Toggle to show/hide Dock icon
 - 📐 Larger preferences window (600x500)
 
-### Improved
+**Improved**
 - 🧹 Cleaned up preferences (removed non-functional options)
 - 🎨 Onboarding interface with spring animations
 - 📝 Native translations for all languages
 
-### Technical
-- Fluid SwiftUI animations
-- NSLocalizedString for i18n
-- VisualEffectBlur for liquid glass
-- Backward compatibility via typealias
-
 ---
 
-**Version** : 1.1
-**Build** : 3
+**Current Version** : 1.2
+**Build** : 4
 **Compatibility** : macOS 13.0+ (Ventura, Sonoma, Sequoia)
 **Author** : Eric COLOGNI
 **License** : MIT
