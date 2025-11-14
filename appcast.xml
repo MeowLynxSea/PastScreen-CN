@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>PastScreen Changelog</title>
+    <link>https://raw.githubusercontent.com/augiefra/PastScreen/main/appcast.xml</link>
+    <description>Most recent updates to PastScreen</description>
+    <language>en</language>
+
+    <item>
+      <title>Version 1.4</title>
+      <description><![CDATA[
+        <h2>PastScreen 1.4 - Complete Rebrand</h2>
+        <ul>
+          <li><strong>New Name:</strong> ScreenSnap is now PastScreen</li>
+          <li><strong>Architecture Modernization:</strong> Enhanced codebase structure</li>
+          <li><strong>Memory Improvements:</strong> Better resource management and stability</li>
+          <li><strong>Multilingual Support:</strong> Enhanced localization for 5 languages</li>
+          <li><strong>Bug Fixes:</strong> Various stability and performance improvements</li>
+        </ul>
+      ]]></description>
+      <pubDate>Thu, 14 Nov 2024 18:00:00 +0100</pubDate>
+      <sparkle:version>7</sparkle:version>
+      <sparkle:shortVersionString>1.4</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/augiefra/PastScreen/releases/download/v1.4/PastScreen-1.4.zip"
+        sparkle:edSignature="QLc4aCchGEGRZ6/47ZhC2Fw8b06s5qkkUD56qamrRr1piFyVSqGwd7mDMI2CIKkbnhiniWTtaXk3gonPS8AvAA=="
+        length="3170226"
+        type="application/octet-stream" />
+    </item>
+
+  </channel>
+</rss>
