@@ -103,7 +103,12 @@ class ScreenshotService: NSObject, SelectionWindowDelegate {
 
         // Hide selection window
         window.orderOut(nil)
-        selectionWindow = nil
+
+        // Delay cleanup to avoid crash (window might have active references)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.selectionWindow = nil
+            print("✅ [SELECTION] Window cleaned up")
+        }
 
         // Perform capture with selected rectangle
         performCapture(rect: rect)
@@ -112,9 +117,14 @@ class ScreenshotService: NSObject, SelectionWindowDelegate {
     func selectionWindowDidCancel(_ window: SelectionWindow) {
         print("❌ [SELECTION] User cancelled selection")
 
-        // Hide and cleanup selection window
+        // Hide selection window
         window.orderOut(nil)
-        selectionWindow = nil
+
+        // Delay cleanup to avoid crash
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.selectionWindow = nil
+            print("✅ [SELECTION] Window cleaned up after cancel")
+        }
     }
     
     // Traitement unifié de l'image capturée
