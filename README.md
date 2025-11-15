@@ -53,11 +53,6 @@ PastScreen never uploads or transmits captures. All operations run locally.
 ## 🛠 Development Workflow
 - Active work happens on [`PastScreen-dev`](https://github.com/augiefra/PastScreen-dev).
 - Public releases (Sparkle + binaries) live on [`PastScreen`](https://github.com/augiefra/PastScreen).
-- Use `main` for production; feature branches are encouraged for larger changes.
-- Before submitting PRs, run:
-  ```bash
-  xcodebuild -scheme PastScreen -configuration Release build
-  ```
 
 ---
 
