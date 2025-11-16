@@ -120,20 +120,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         // Setup menu
         setupMenu()
 
-        requestNotificationPermission()
+        // NOTE: Permissions are now requested via Onboarding only
+        // No auto-prompting at launch to avoid popup chaos
 
         #if DEBUG
         testNotification()
         #endif
 
         // Configurer le raccourci clavier global Option + Cmd + S
+        // Will work only if Accessibility permission is granted via Onboarding
         setupGlobalHotkey()
 
         // Observer les changements de settings pour le raccourci clavier
         setupSettingsObserver()
 
+        // Check permission status (read-only, no popups)
         permissionManager.checkAllPermissions()
-        requestCriticalPermissionsIfNeeded()
 
         // Observer les captures d'écran réussies pour mettre à jour lastScreenshotPath
         NotificationCenter.default.addObserver(
@@ -392,38 +394,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 #endif
 
-    private func requestCriticalPermissionsIfNeeded() {
-        if permissionManager.notificationStatus == .notDetermined {
-            requestNotificationPermission()
-        }
-
-        ensureAccessibilityPermissionIfNeeded()
-
-        if permissionManager.screenRecordingStatus != .authorized && !hasPromptedScreenRecording {
-            hasPromptedScreenRecording = true
-            permissionManager.requestPermission(.screenRecording) { granted in
-                if !granted {
-                    DispatchQueue.main.async {
-                        self.permissionManager.showPermissionAlert(for: [.screenRecording])
-                    }
-                }
-            }
-        }
-    }
-
-    private func ensureAccessibilityPermissionIfNeeded() {
-        guard settings.globalHotkeyEnabled else { return }
-        if permissionManager.accessibilityStatus == .authorized { return }
-        if hasPromptedAccessibility { return }
-        hasPromptedAccessibility = true
-        permissionManager.requestPermission(.accessibility) { granted in
-            if !granted {
-                DispatchQueue.main.async {
-                    self.permissionManager.showPermissionAlert(for: [.accessibility])
-                }
-            }
-        }
-    }
+    // REMOVED: Auto-permission request functions
+    // Permissions are now ONLY requested via Onboarding
+    // This prevents popup chaos on first launch
 
     private func requestAllPermissions() {
         print("🔐 [APP] Requesting all necessary permissions...")
@@ -503,7 +476,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if enabled {
-                    self.ensureAccessibilityPermissionIfNeeded()
+                    // setupGlobalHotkey will check permissions and warn if not granted
+                    // User should grant permissions via Onboarding, not auto-prompted here
                     self.setupGlobalHotkey()
                 } else {
                     self.removeGlobalHotkey()
@@ -526,7 +500,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         if !trusted {
             print("⚠️ [HOTKEY] L'application n'a pas les autorisations d'accessibilité!")
             print("⚠️ [HOTKEY] Le raccourci global ne fonctionnera PAS sans cette autorisation")
-            ensureAccessibilityPermissionIfNeeded()
+            print("💡 [HOTKEY] Permissions should be granted via Onboarding")
             return
         }
 

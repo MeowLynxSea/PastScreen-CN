@@ -481,11 +481,18 @@ struct OnboardingContentView: View {
     }
 
     private func requestScreenRecordingPermission() {
-        // Always open System Preferences directly
-        openSystemPreferences(pane: "ScreenCapture")
+        // Trigger native macOS Screen Recording popup
+        print("🔐 [ONBOARDING] Requesting Screen Recording permission via native popup")
+        PermissionManager.shared.requestPermission(.screenRecording) { granted in
+            if granted {
+                print("✅ [ONBOARDING] Screen Recording permission granted")
+            } else {
+                print("⚠️ [ONBOARDING] Screen Recording permission denied or needs System Preferences")
+            }
+        }
 
         // Start polling to check if permission was granted
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
             if #available(macOS 14.0, *) {
                 Task { @MainActor in
                     do {
@@ -493,7 +500,7 @@ struct OnboardingContentView: View {
                         if !content.displays.isEmpty {
                             self.screenRecordingGranted = true
                             timer.invalidate()
-                            print("✅ Screen Recording permission granted")
+                            print("✅ Screen Recording permission granted (detected via polling)")
                         }
                     } catch {
                         // Still waiting for permission
@@ -503,22 +510,29 @@ struct OnboardingContentView: View {
                 if CGPreflightScreenCaptureAccess() {
                     self.screenRecordingGranted = true
                     timer.invalidate()
-                    print("✅ Screen Recording permission granted")
+                    print("✅ Screen Recording permission granted (detected via polling)")
                 }
             }
         }
     }
 
     private func requestAccessibilityPermission() {
-        // Open System Preferences directly for Accessibility
-        openSystemPreferences(pane: "Accessibility")
+        // Trigger native macOS Accessibility popup
+        print("🔐 [ONBOARDING] Requesting Accessibility permission via native popup")
+        PermissionManager.shared.requestPermission(.accessibility) { granted in
+            if granted {
+                print("✅ [ONBOARDING] Accessibility permission granted")
+            } else {
+                print("⚠️ [ONBOARDING] Accessibility permission denied or needs System Preferences")
+            }
+        }
 
         // Start polling to check if permission was granted
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
             if AXIsProcessTrusted() {
                 self.accessibilityGranted = true
                 timer.invalidate()
-                print("✅ Accessibility permission granted")
+                print("✅ Accessibility permission granted (detected via polling)")
             }
         }
     }
