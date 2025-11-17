@@ -1,4 +1,4 @@
-# 📸 PastScreen 1.5
+# 📸 PastScreen
 **Ultra-fast, clipboard-first screenshots for developers on macOS.**
 
 [![Version](https://img.shields.io/badge/version-1.5-blue.svg)](https://github.com/augiefra/PastScreen/releases)
