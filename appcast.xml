@@ -9,9 +9,14 @@
     <item>
       <title>Version 1.9</title>
       <description><![CDATA[
-        <h2>PastScreen 1.9</h2>
+        <h2>PastScreen 1.9 - Golden Master UI Revamp</h2>
         <ul>
-          <li><strong>Release notes:</strong> à compléter dans appcast.xml.</li>
+          <li><strong>Complete Settings Redesign:</strong> Modern sidebar-style interface with better visual consistency</li>
+          <li><strong>Per-App Clipboard Rules:</strong> Configure Auto/Image/Path behavior for specific applications</li>
+          <li><strong>Strict 'Image Only' Mode:</strong> Dedicated mode for AI agents (fixes Zed compatibility)</li>
+          <li><strong>App Store Compliance:</strong> Security Scoped Bookmarks, explicit storage selection, sandboxed mode</li>
+          <li><strong>Enhanced Onboarding:</strong> Polished sizing, opacity, and spacing for better UX</li>
+          <li><strong>English-Only Localization:</strong> Prevents mixed localizations for App Store version</li>
         </ul>
       ]]></description>
       <pubDate>Sat, 22 Nov 2025 18:26:33 +0100</pubDate>
