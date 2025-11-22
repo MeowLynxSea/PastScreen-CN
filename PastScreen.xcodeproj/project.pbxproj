@@ -25,12 +25,20 @@
 			);
 			target = 160D2D552ECCB91300A25E82 /* PastScreen AppStore */;
 		};
+		168B20442ED1178200CD85F2 /* Exceptions for "PastScreen" folder in "PastScreen" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 16C553402EB8AF3F008745D0 /* PastScreen */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		16C553432EB8AF3F008745D0 /* PastScreen */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				168B20442ED1178200CD85F2 /* Exceptions for "PastScreen" folder in "PastScreen" target */,
 				160D2D602ECCB91300A25E82 /* Exceptions for "PastScreen" folder in "PastScreen AppStore" target */,
 			);
 			path = PastScreen;
@@ -208,7 +216,7 @@
 				CODE_SIGN_ENTITLEMENTS = PastScreenAppStore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -232,7 +240,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				OTHER_SWIFT_FLAGS = "-D APPSTORE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ecologni.PastScreen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -254,7 +262,7 @@
 				CODE_SIGN_ENTITLEMENTS = PastScreenAppStore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -278,7 +286,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				OTHER_SWIFT_FLAGS = "-D APPSTORE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ecologni.PastScreen;
 				PRODUCT_NAME = "$(TARGET_NAME)";

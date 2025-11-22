@@ -6,6 +6,7 @@
 "menu.history" = "History";
 "menu.history.empty" = "No recent captures";
 "menu.history.clear" = "Clear History";
+"menu.destination" = "Change Save Folder...";
 "menu.preferences" = "Preferences...";
 "menu.check_updates" = "Check for Updates...";
 "menu.quit" = "Quit PastScreen";
@@ -111,14 +112,23 @@
 "onboarding.page1.title" = "Ultra Fast";
 "onboarding.page1.description" = "Capture and paste in seconds.\n⌥⌘S → Capture → ⌘V in your IDE";
 
-"onboarding.page2.title" = "Auto Cleanup";
-"onboarding.page2.description" = "All captures automatically deleted on reboot.\nNo more cluttered folders!";
+"onboarding.page2.title" = "Storage Location";
+"onboarding.page2.description" = "Choose where PastScreen saves your screenshots.";
+
+"onboarding.storage.temp.title" = "Temporary (Auto-Clean)";
+"onboarding.storage.temp.desc" = "Perfect for quick copy/paste.\nFiles deleted on restart.";
+
+"onboarding.storage.custom.title" = "Custom Folder";
+"onboarding.storage.custom.desc" = "Keep your files permanently.\nSelect a folder (e.g. Pictures).";
 
 "onboarding.page3.title" = "Direct Clipboard";
 "onboarding.page3.description" = "Automatic clipboard copy.\nPerfect for Cursor, VSCode, Zed.";
 
 "onboarding.page4.title" = "Customizable";
 "onboarding.page4.description" = "Shortcuts, formats, folders...\nEverything configurable from the menu bar.";
+
+"onboarding.page_apps.title" = "App Rules";
+"onboarding.page_apps.description" = "Customize behavior per app.\nForce Image copy for AI tools, Path for Code Editors.";
 
 /* Onboarding - Permissions */
 "onboarding.permissions.screen_recording.title" = "Screen Recording";

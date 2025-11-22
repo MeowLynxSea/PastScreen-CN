@@ -264,6 +264,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         menu.addItem(NSMenuItem.separator())
 
+        let destinationItem = NSMenuItem(title: NSLocalizedString("menu.destination", comment: ""), action: #selector(changeDestinationFolder), keyEquivalent: "")
+        destinationItem.target = self
+        menu.addItem(destinationItem)
+
         let prefsItem = NSMenuItem(title: NSLocalizedString("menu.preferences", comment: ""), action: #selector(openPreferences), keyEquivalent: ",")
         prefsItem.target = self
         menu.addItem(prefsItem)
@@ -364,6 +368,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         AppSettings.shared.clearHistory()
     }
 
+    @objc func changeDestinationFolder() {
+        // Ensure window is frontmost for the panel
+        NSApp.activate(ignoringOtherApps: true)
+
+        if let newPath = AppSettings.shared.selectFolder() {
+            AppSettings.shared.saveFolderPath = newPath
+            // Also ensure saving is enabled if user explicitly picks a folder
+            AppSettings.shared.saveToFile = true
+        }
+    }
+
     @objc func openPreferences() {
         // Si la fenêtre existe déjà, la mettre au premier plan
         if let window = preferencesWindow {
@@ -447,6 +462,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             print("🖱️ [DELEGATE] Clic sur notification - ouverture du fichier: \(filePath)")
             NSWorkspace.shared.selectFile(filePath, inFileViewerRootedAtPath: "")
         }
+
+        // Fix: Force activation policy back to accessory if Dock icon shouldn't be shown
+        // Clicking a notification might activate the app, making the Dock icon appear.
+        if !AppSettings.shared.showInDock {
+            DispatchQueue.main.async {
+                NSApp.setActivationPolicy(.accessory)
+            }
+        }
+
         completionHandler()
     }
 

@@ -2,195 +2,454 @@
 //  SettingsView.swift
 //  PastScreen
 //
-//  Settings window with Glass design
+//  Settings window with modern Sidebar UI and Glass design
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 #if canImport(TipKit)
 import TipKit
 #endif
 
 struct SettingsView: View {
     @EnvironmentObject var settings: AppSettings
+    @State private var selectedTab: SettingsTab = .general
 
-    var body: some View {
-        TabView {
-            GeneralSettingsTab()
-                .tabItem {
-                    Label("Général", systemImage: "gear")
-                }
+    enum SettingsTab: String, CaseIterable {
+        case general = "General"
+        case capture = "Capture"
+        case storage = "Storage"
+        case apps = "Apps"
 
-            CaptureSettingsTab()
-                .tabItem {
-                    Label("Capture", systemImage: "camera.fill")
-                }
-
-            StorageSettingsTab()
-                .tabItem {
-                    Label("Stockage", systemImage: "folder.fill")
-                }
-        }
-        .frame(width: 600, height: 500)
-    }
-}
-
-// MARK: - General Settings Tab
-
-struct GeneralSettingsTab: View {
-    @EnvironmentObject var settings: AppSettings
-
-    var body: some View {
-        Form {
-#if canImport(TipKit)
-            if #available(macOS 14.0, *) {
-                TipView(QuickCaptureTip())
-                    .tipBackground(.ultraThickMaterial)
-                    .padding(.vertical, 4)
-            }
-#endif
-            Section {
-                Toggle("Lancer au démarrage du Mac", isOn: $settings.launchAtLogin)
-                    .help("Lance PastScreen automatiquement au démarrage de votre Mac")
-
-                Toggle("Afficher l'icône dans le Dock", isOn: $settings.showInDock)
-                    .help("Affiche l'icône de l'application dans le Dock. Désactivez pour passer en mode barre de menus uniquement.")
-
-                Toggle("Jouer un son lors de la capture", isOn: $settings.playSoundOnCapture)
-                    .help("Feedback audio lors de chaque capture")
-
-                Toggle("Vérifier les mises à jour automatiquement", isOn: $settings.autoCheckUpdates)
-                    .help("Vérifie automatiquement les nouvelles versions au démarrage")
-            } header: {
-                Text("Options générales")
-            }
-
-            Section {
-                Button("Afficher le tutoriel de démarrage") {
-                    OnboardingManager.shared.show()
-                }
-                .help("Réaffiche l'écran d'accueil avec les instructions")
-            } header: {
-                Text("Aide")
+        var icon: String {
+            switch self {
+            case .general: return "gear"
+            case .capture: return "camera.fill"
+            case .storage: return "folder.fill"
+            case .apps: return "macwindow"
             }
         }
-        .formStyle(.grouped)
-        .padding()
+
+        var color: Color {
+            switch self {
+            case .general: return .gray
+            case .capture: return .red
+            case .storage: return .blue
+            case .apps: return .green
+            }
+        }
     }
-}
-
-// MARK: - Capture Settings Tab
-
-struct CaptureSettingsTab: View {
-    @EnvironmentObject var settings: AppSettings
 
     var body: some View {
-        Form {
-            Section {
-                Picker("Format d'image", selection: $settings.imageFormat) {
-                    Text("PNG (sans perte)").tag("png")
-                    Text("JPEG (compressé)").tag("jpeg")
-                }
-                .help("PNG recommandé pour du texte et code, JPEG pour des photos")
-            } header: {
-                Text("Format de fichier")
-            }
-
-            Section {
-                VStack(alignment: .leading, spacing: 12) {
-                    Toggle("Activer le raccourci clavier global", isOn: $settings.globalHotkeyEnabled)
-                        .help("Active ou désactive le raccourci ⌥⌘S pour capturer une zone")
-
-                    if settings.globalHotkeyEnabled {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Capturer une zone :")
-                                Spacer()
-                                Text("⌥⌘S")
-                                    .font(.system(.body, design: .monospaced))
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-                                    .background(Color.secondary.opacity(0.1))
-                                    .cornerRadius(4)
-                            }
-
-                            HStack {
-                                Text("Clic sur l'icône :")
-                                Spacer()
-                                Text("Ouvrir le menu")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .padding(.leading, 20)
-                        .opacity(0.8)
-                    } else {
-                        Text("Le raccourci clavier global est désactivé. Vous pouvez toujours utiliser l'icône de la barre de menu.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .padding(.leading, 20)
+        HStack(spacing: 0) {
+            // Sidebar
+            VStack(spacing: 4) {
+                ForEach(SettingsTab.allCases, id: \.self) { tab in
+                    SidebarButton(tab: tab, isSelected: selectedTab == tab) {
+                        selectedTab = tab
                     }
                 }
-            } header: {
-                Text("Raccourcis clavier")
+                Spacer()
+
+                // Footer
+                Text("v1.9 (13)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 8)
             }
+            .padding(.vertical)
+            .padding(.horizontal, 10)
+            .frame(width: 180)
+            .background(.ultraThinMaterial)
+
+            Divider()
+
+            // Content
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Text(selectedTab.rawValue)
+                        .font(.title)
+                        .fontWeight(.bold)
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 24)
+
+                ScrollView {
+                    VStack(spacing: 32) {
+                        switch selectedTab {
+                        case .general: GeneralSettingsView()
+                        case .capture: CaptureSettingsView()
+                        case .storage: StorageSettingsView()
+                        case .apps: AppsSettingsView()
+                        }
+                    }
+                    .padding(24)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(nsColor: .windowBackgroundColor))
         }
-        .formStyle(.grouped)
-        .padding()
+        .frame(width: 750, height: 500)
     }
 }
 
-// MARK: - Storage Settings Tab
-
-struct StorageSettingsTab: View {
-    @EnvironmentObject var settings: AppSettings
-    @State private var showingFolderPicker = false
+struct SidebarButton: View {
+    let tab: SettingsView.SettingsTab
+    let isSelected: Bool
+    let action: () -> Void
 
     var body: some View {
-        Form {
-            Section {
-                Toggle("Enregistrer sur le disque", isOn: $settings.saveToFile)
-                    .help("Sauvegarde les captures dans un dossier")
+        Button(action: action) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(tab.color)
+                        .frame(width: 22, height: 22)
 
-                if settings.saveToFile {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Dossier de sauvegarde :")
+                    Image(systemName: tab.icon)
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(.white)
+                }
+
+                Text(tab.rawValue)
+                    .font(.system(size: 13))
+                    .fontWeight(isSelected ? .medium : .regular)
+                    .foregroundColor(isSelected ? .white : .primary)
+
+                Spacer()
+            }
+            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .background(isSelected ? Color.accentColor : Color.clear)
+            .cornerRadius(8)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - General Settings
+
+struct GeneralSettingsView: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        VStack(spacing: 32) {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Options", systemImage: "gearshape")
+                    .font(.headline)
+                    .padding(.leading, 2)
+
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("Launch at Login", isOn: $settings.launchAtLogin)
+                        Divider()
+                        Toggle("Show in Dock", isOn: $settings.showInDock)
+                        Divider()
+                        Toggle("Play capture sound", isOn: $settings.playSoundOnCapture)
+                        Divider()
+                        Toggle("Check for updates automatically", isOn: $settings.autoCheckUpdates)
+                    }
+                    .padding(12)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Help", systemImage: "questionmark.circle")
+                    .font(.headline)
+                    .padding(.leading, 2)
+
+                GroupBox {
+                    HStack {
+                        Text("Need help getting started?")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                        Spacer()
+                        Button("Show Tutorial") {
+                            OnboardingManager.shared.show()
+                        }
+                    }
+                    .padding(12)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Capture Settings
+
+struct CaptureSettingsView: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        VStack(spacing: 32) {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Format", systemImage: "photo")
+                    .font(.headline)
+                    .padding(.leading, 2)
+
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Picker("Image Format", selection: $settings.imageFormat) {
+                            Text("PNG (Lossless)").tag("png")
+                            Text("JPEG (Compressed)").tag("jpeg")
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
 
                         HStack {
-                            Text(settings.saveFolderPath)
-                                .font(.system(.caption, design: .monospaced))
+                            Text("Format:")
                                 .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-
+                            Text(settings.imageFormat.uppercased())
+                                .fontWeight(.medium)
                             Spacer()
+                        }
+                        .font(.caption)
+                    }
+                    .padding(12)
+                }
+            }
 
-                            Button("Changer...") {
-                                if let newPath = settings.selectFolder() {
-                                    settings.saveFolderPath = newPath
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Shortcuts", systemImage: "keyboard")
+                    .font(.headline)
+                    .padding(.leading, 2)
+
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("Enable global hotkey", isOn: $settings.globalHotkeyEnabled)
+
+                        if settings.globalHotkeyEnabled {
+                            Divider()
+                            HStack {
+                                Text("Capture Area")
+                                Spacer()
+                                KeyboardShortcutView(keys: ["⌥", "⌘", "S"])
+                            }
+                        }
+                    }
+                    .padding(12)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Storage Settings
+
+struct StorageSettingsView: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        VStack(spacing: 32) {
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Destination", systemImage: "externaldrive")
+                    .font(.headline)
+                    .padding(.leading, 2)
+
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("Save to Disk", isOn: $settings.saveToFile)
+                            .onChange(of: settings.saveToFile) { _, newValue in
+                                if newValue {
+                                    // Prompt if using temp dir
+                                    if settings.saveFolderPath.contains(NSTemporaryDirectory()) ||
+                                       settings.saveFolderPath.contains("/T/PastScreen") ||
+                                       settings.saveFolderPath.contains("/tmp/") {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                            if let newPath = settings.selectFolder() {
+                                                settings.saveFolderPath = newPath
+                                            }
+                                        }
+                                    }
                                 }
                             }
+
+                        if settings.saveToFile {
+                            Divider()
+                            HStack {
+                                Image(systemName: "folder.fill")
+                                    .foregroundStyle(.blue)
+
+                                Text(settings.saveFolderPath.replacingOccurrences(of: "/Users/\(NSUserName())", with: "~"))
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .truncationMode(.middle)
+
+                                Spacer()
+
+                                Button("Change...") {
+                                    if let newPath = settings.selectFolder() {
+                                        settings.saveFolderPath = newPath
+                                    }
+                                }
+                            }
+                            .padding(8)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(6)
+
+                            HStack {
+                                Button("Open Folder") {
+                                    NSWorkspace.shared.open(URL(fileURLWithPath: settings.saveFolderPath))
+                                }
+
+                                Spacer()
+
+                                Button("Clear Folder") {
+                                    settings.clearSaveFolder()
+                                }
+                                .foregroundColor(.red)
+                            }
                         }
+                    }
+                    .padding(12)
+                }
+            }
+        }
+    }
+}
 
-                        HStack {
-                            Button("Ouvrir le dossier") {
-                                NSWorkspace.shared.open(URL(fileURLWithPath: settings.saveFolderPath))
-                            }
+// MARK: - Apps Settings
 
-                            Button("Vider le dossier") {
-                                settings.clearSaveFolder()
+struct AppsSettingsView: View {
+    @EnvironmentObject var settings: AppSettings
+
+    var body: some View {
+        VStack(spacing: 16) {
+            GroupBox {
+                VStack(spacing: 12) {
+                    Text("Override clipboard behavior per application.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    Text("Force 'Image' for AI/Chats, or 'Path' for Code Editors.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(12)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Overrides", systemImage: "list.bullet")
+                    .font(.headline)
+                    .padding(.leading, 2)
+
+                GroupBox {
+                    if settings.appOverrides.isEmpty {
+                        VStack(spacing: 16) {
+                            Image(systemName: "macwindow.badge.plus")
+                                .font(.system(size: 48))
+                                .foregroundStyle(.secondary.opacity(0.3))
+
+                            Text("No application rules")
+                                .font(.headline)
+
+                            Text("Add apps to override clipboard behavior.\nForce 'Image' for AI/Chats or 'Path' for Editors.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 150)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [5]))
+                                .foregroundStyle(.secondary.opacity(0.2))
+                        )
+                    } else {
+                        ForEach($settings.appOverrides) { $override in
+                            GroupBox {
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text(override.appName)
+                                            .fontWeight(.medium)
+                                        Text(override.bundleIdentifier)
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+
+                                    Spacer()
+
+                                    Picker("", selection: $override.format) {
+                                        Text("Auto").tag(ClipboardFormat.auto)
+                                        Text("Image Only").tag(ClipboardFormat.image)
+                                        Text("Path Only").tag(ClipboardFormat.path)
+                                    }
+                                    .frame(width: 110)
+                                    .labelsHidden()
+
+                                    Button(action: {
+                                        settings.removeAppOverride(id: override.bundleIdentifier)
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundStyle(.gray.opacity(0.5))
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                .padding(4)
                             }
-                            .foregroundStyle(.red)
                         }
                     }
                 }
-            } header: {
-                Text("Stockage")
+            }
+
+            Button(action: addApp) {
+                Label("Add Application Rule", systemImage: "plus")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+    }
+
+    func addApp() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.application]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.directoryURL = URL(fileURLWithPath: "/Applications")
+        panel.prompt = "Select"
+        panel.message = "Select an application"
+
+        if panel.runModal() == .OK, let url = panel.url {
+            if let bundle = Bundle(url: url), let bundleID = bundle.bundleIdentifier {
+                let name = FileManager.default.displayName(atPath: url.path)
+                let override = AppOverride(bundleIdentifier: bundleID, appName: name, format: .image)
+                settings.addAppOverride(override)
             }
         }
-        .formStyle(.grouped)
-        .padding()
+    }
+}
+
+struct KeyboardShortcutView: View {
+    let keys: [String]
+
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(keys, id: \.self) { key in
+                Text(key)
+                    .font(.system(.subheadline, design: .monospaced))
+                    .fontWeight(.medium)
+                    .foregroundStyle(.secondary)
+                    .frame(minWidth: 24, minHeight: 24)
+                    .padding(.horizontal, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.gray.opacity(0.15))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                            )
+                    )
+            }
+        }
     }
 }
 

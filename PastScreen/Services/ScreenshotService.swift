@@ -463,16 +463,53 @@ class ScreenshotService: NSObject, SelectionWindowDelegate {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
 
-        let appCategory = detectFrontmostApp()
+        // Check for App Override first
+        var overrideFormat: ClipboardFormat = .auto
+        if let bundleID = previousApp?.bundleIdentifier,
+           let override = AppSettings.shared.getOverride(for: bundleID) {
+            overrideFormat = override
+            print("⚡️ [CLIPBOARD] App Override found for \(bundleID): \(override.rawValue)")
+        }
+
         var filePath: String? = nil
 
-        switch appCategory {
+        // Helper to handle file saving once
+        func getSavedPath() -> String? {
+            if filePath == nil {
+                filePath = saveToFileAndGetPath(cgImage: cgImage, pointSize: pointSize)
+            }
+            return filePath
+        }
+
+        // Handle Strict Image Override
+        if overrideFormat == .image {
+            // FORCE IMAGE ONLY mode: Do not write any file path or URL to pasteboard.
+            // This forces apps like Zed Agent / Web Chats to paste the image content.
+            pasteboard.writeObjects([image])
+            // Still save file for history if needed, but don't put it in pasteboard
+            _ = getSavedPath()
+            print("✅ [CLIPBOARD] Image data ONLY copied (Force Image mode)")
+            return filePath
+        }
+
+        // Determine effective format for other cases
+        let effectiveCategory: AppCategory
+        if overrideFormat == .auto {
+            effectiveCategory = detectFrontmostApp()
+        } else {
+            // Map remaining overrides
+            switch overrideFormat {
+            case .path: effectiveCategory = .codeEditor
+            default: effectiveCategory = detectFrontmostApp()
+            }
+        }
+
+        switch effectiveCategory {
         case .codeEditor:
             // Code editors prefer file paths for Markdown linking
-            if let imagePath = saveToFileAndGetPath(cgImage: cgImage, pointSize: pointSize) {
-                filePath = imagePath
+            if let imagePath = getSavedPath() {
                 pasteboard.setString(imagePath, forType: .string)
-                print("✅ [CLIPBOARD] File path copied for code editor: \(imagePath)")
+                print("✅ [CLIPBOARD] File path copied (Code Editor mode): \(imagePath)")
             } else {
                 // Fallback: write image if file save fails
                 pasteboard.writeObjects([image])
@@ -482,27 +519,23 @@ class ScreenshotService: NSObject, SelectionWindowDelegate {
         case .webBrowser, .designTool:
             // Browsers and design tools need actual image data
             pasteboard.writeObjects([image])
-            if let imagePath = saveToFileAndGetPath(cgImage: cgImage, pointSize: pointSize) {
-                filePath = imagePath
+            if let imagePath = getSavedPath() {
                 // Use NSURL instead of String to prevent web apps from preferring text over image
                 let url = NSURL(fileURLWithPath: imagePath)
                 pasteboard.writeObjects([url])
-                print("✅ [CLIPBOARD] Image data copied for browser/design tool + file path available: \(imagePath)")
+                print("✅ [CLIPBOARD] Image data + File URL copied (Browser mode)")
             } else {
-                print("✅ [CLIPBOARD] Image data copied for browser/design tool (no path)")
+                print("✅ [CLIPBOARD] Image data copied (no path)")
             }
 
         case .unknown:
             // Unknown apps: write BOTH formats for maximum compatibility
-            // We use URL object instead of String to prevent web apps (like DIA/ChatGPT)
-            // from prioritizing the file path text over the image content.
-            // Modern editors (VSCode, Zed) should handle file URLs correctly.
             pasteboard.writeObjects([image])
-            if let imagePath = saveToFileAndGetPath(cgImage: cgImage, pointSize: pointSize) {
-                filePath = imagePath
+            if let imagePath = getSavedPath() {
+                // Convert to NSURL which conforms to NSPasteboardWriting
                 let url = NSURL(fileURLWithPath: imagePath)
                 pasteboard.writeObjects([url])
-                print("✅ [CLIPBOARD] Both image data AND file URL copied (unknown app)")
+                print("✅ [CLIPBOARD] Image data + File URL copied (Unknown mode)")
             } else {
                 print("✅ [CLIPBOARD] Image data copied (file save failed)")
             }
@@ -534,18 +567,26 @@ class ScreenshotService: NSObject, SelectionWindowDelegate {
             return nil
         }
 
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
-        let timestamp = dateFormatter.string(from: Date())
-        let filename = "Screenshot-\(timestamp).\(fileExtension)"
+        // Incremental naming logic: Screen-1.png, Screen-2.png...
+        var seq = AppSettings.shared.screenshotSequence
+        var filename = "Screen-\(seq).\(fileExtension)"
 
-        let savePath: String
-        if AppSettings.shared.saveFolderPath.isEmpty || AppSettings.shared.saveFolderPath == NSHomeDirectory() + "/Desktop/" {
-            savePath = NSTemporaryDirectory() + filename
-        } else {
-            AppSettings.shared.ensureFolderExists()
-            savePath = AppSettings.shared.saveFolderPath + filename
+        // Ensure folder exists
+        AppSettings.shared.ensureFolderExists()
+        let folderPath = AppSettings.shared.saveFolderPath
+
+        // Ensure uniqueness
+        let fileManager = FileManager.default
+        var savePath = folderPath + filename
+
+        while fileManager.fileExists(atPath: savePath) {
+            seq += 1
+            filename = "Screen-\(seq).\(fileExtension)"
+            savePath = folderPath + filename
         }
+
+        // Save next sequence number
+        AppSettings.shared.screenshotSequence = seq + 1
 
         do {
             try data.write(to: URL(fileURLWithPath: savePath))

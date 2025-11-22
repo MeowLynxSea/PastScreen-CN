@@ -83,7 +83,7 @@ class OnboardingManager {
 
             // Calculate window size and position (centered)
             let windowWidth: CGFloat = 620
-            let windowHeight: CGFloat = 640
+            let windowHeight: CGFloat = 800
 
             guard let screen = NSScreen.main else {
                 NSLog("❌ [ONBOARDING] No main screen found")
@@ -186,7 +186,8 @@ enum OnboardingPage: Int, CaseIterable {
     case screenRecording = 1
     case accessibility = 2
     case autoCleanup = 3
-    case clipboard = 4
+    case appRules = 4
+    case clipboard = 5
 
     var title: String {
         switch self {
@@ -194,6 +195,7 @@ enum OnboardingPage: Int, CaseIterable {
         case .screenRecording: return NSLocalizedString("onboarding.permissions.screen_recording.title", comment: "")
         case .accessibility: return NSLocalizedString("onboarding.permissions.accessibility.title", comment: "")
         case .autoCleanup: return NSLocalizedString("onboarding.page2.title", comment: "")
+        case .appRules: return NSLocalizedString("onboarding.page_apps.title", comment: "")
         case .clipboard: return NSLocalizedString("onboarding.page3.title", comment: "")
         }
     }
@@ -204,6 +206,7 @@ enum OnboardingPage: Int, CaseIterable {
         case .screenRecording: return NSLocalizedString("onboarding.permissions.screen_recording.description", comment: "")
         case .accessibility: return NSLocalizedString("onboarding.permissions.accessibility.description", comment: "")
         case .autoCleanup: return NSLocalizedString("onboarding.page2.description", comment: "")
+        case .appRules: return NSLocalizedString("onboarding.page_apps.description", comment: "")
         case .clipboard: return NSLocalizedString("onboarding.page3.description", comment: "")
         }
     }
@@ -214,6 +217,7 @@ enum OnboardingPage: Int, CaseIterable {
         case .screenRecording: return "video.fill"
         case .accessibility: return "keyboard.fill"
         case .autoCleanup: return "sparkles"
+        case .appRules: return "macwindow"
         case .clipboard: return "doc.on.clipboard.fill"
         }
     }
@@ -224,6 +228,7 @@ enum OnboardingPage: Int, CaseIterable {
         case .screenRecording: return .red
         case .accessibility: return .blue
         case .autoCleanup: return .purple
+        case .appRules: return .green
         case .clipboard: return .cyan
         }
     }
@@ -233,6 +238,7 @@ enum OnboardingPage: Int, CaseIterable {
 
 struct OnboardingContentView: View {
     let onDismiss: () -> Void
+    @ObservedObject var settings = AppSettings.shared
 
     @State private var currentPage: OnboardingPage = .welcome
     @State private var scale: CGFloat = 0.9
@@ -268,12 +274,13 @@ struct OnboardingContentView: View {
                         .foregroundColor(.secondary)
                 }
                 .padding(.top, 72)
-                .padding(.bottom, 40)
+                .padding(.bottom, currentPage == .autoCleanup ? 10 : 40)
 
                 // Page content
                 pageContent
-                    .frame(height: 270)
+                    .frame(height: currentPage == .autoCleanup ? 360 : 270)
                     .padding(.horizontal, 32)
+                    .padding(.top, 10)
 
                 // Page indicators
                 HStack(spacing: 8) {
@@ -325,11 +332,17 @@ struct OnboardingContentView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(width: 620, height: 640)
+        .frame(width: 620, height: 800)
         .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThickMaterial)
-                .shadow(color: .black.opacity(0.5), radius: 30, x: 0, y: 15)
+            ZStack {
+                // Opaque background layer to reduce transparency (Liquid Glass fix)
+                Color(nsColor: .windowBackgroundColor).opacity(0.6)
+
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.ultraThickMaterial)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(color: .black.opacity(0.5), radius: 30, x: 0, y: 15)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 20)
@@ -408,6 +421,37 @@ struct OnboardingContentView: View {
                     action: requestAccessibilityPermission
                 )
                 .padding(.top, 24)
+            } else if currentPage == .autoCleanup {
+                VStack(spacing: 16) {
+                    storageOption(
+                        title: NSLocalizedString("onboarding.storage.temp.title", comment: ""),
+                        description: NSLocalizedString("onboarding.storage.temp.desc", comment: ""),
+                        icon: "trash.circle.fill",
+                        color: .purple,
+                        isSelected: settings.saveFolderPath.contains("T/PastScreen") || settings.saveFolderPath.contains("/tmp/"),
+                        action: {
+                            let tempPath = NSTemporaryDirectory() + "PastScreen/"
+                            settings.saveFolderPath = tempPath
+                            settings.saveToFile = true
+                        }
+                    )
+
+                    storageOption(
+                        title: NSLocalizedString("onboarding.storage.custom.title", comment: ""),
+                        description: NSLocalizedString("onboarding.storage.custom.desc", comment: ""),
+                        icon: "folder.circle.fill",
+                        color: .blue,
+                        isSelected: !settings.saveFolderPath.contains("T/PastScreen") && !settings.saveFolderPath.contains("/tmp/"),
+                        action: {
+                            if let path = settings.selectFolder() {
+                                settings.saveFolderPath = path
+                                settings.saveToFile = true
+                            }
+                        }
+                    )
+                }
+                .padding(.horizontal, 40)
+                .padding(.top, 10)
             }
 
             Spacer()
@@ -418,6 +462,47 @@ struct OnboardingContentView: View {
             removal: .move(edge: .leading).combined(with: .opacity)
         ))
         .id(currentPage)
+    }
+
+    private func storageOption(title: String, description: String, icon: String, color: Color, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                Image(systemName: icon)
+                    .font(.system(size: 24))
+                    .foregroundColor(isSelected ? .white : color)
+                    .frame(width: 32)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(isSelected ? .white : .primary)
+
+                    Text(description)
+                        .font(.system(size: 12))
+                        .foregroundColor(isSelected ? .white.opacity(0.8) : .secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+                }
+
+                Spacer()
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+                }
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? color : Color.gray.opacity(0.1))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? Color.clear : Color.gray.opacity(0.2), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private func permissionButton(title: String, granted: Bool, action: @escaping () -> Void) -> some View {
