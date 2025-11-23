@@ -7,6 +7,28 @@
     <language>en</language>
 
     <item>
+      <title>Version 2.0</title>
+      <description><![CDATA[
+        <h2>PastScreen 2.0 - App Store Compliance & Storage Fix</h2>
+        <ul>
+          <li><strong>User-Accessible Storage:</strong> Default save location moved to ~/Pictures/PastScreen (was hidden Container folder)</li>
+          <li><strong>Auto-Cleanup on Launch:</strong> Screenshots auto-cleaned on app restart for Pictures folder</li>
+          <li><strong>Localization Fix:</strong> Removed last French string, now 100% English</li>
+          <li><strong>App Store Ready:</strong> Complies with Apple guidelines 2.1 and 2.4.5(i)</li>
+        </ul>
+      ]]></description>
+      <pubDate>Sat, 23 Nov 2025 19:15:00 +0100</pubDate>
+      <sparkle:version>14</sparkle:version>
+      <sparkle:shortVersionString>2.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/augiefra/PastScreen/releases/download/v2.0/PastScreen-2.0.zip"
+        sparkle:edSignature="SDsmNAQmBsOR6UxSQoej4KgsfQBPGKLy3dphbCx+BgfNLprkRS9lOyIc12K9IgPpaWTL2HvAsnF+HMaYsSaXDw=="
+        length="3346426"
+        type="application/octet-stream" />
+    </item>
+
+    <item>
       <title>Version 1.9</title>
       <description><![CDATA[
         <h2>PastScreen 1.9 - Golden Master UI Revamp</h2>

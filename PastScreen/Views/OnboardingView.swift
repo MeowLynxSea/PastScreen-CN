@@ -428,10 +428,10 @@ struct OnboardingContentView: View {
                         description: NSLocalizedString("onboarding.storage.temp.desc", comment: ""),
                         icon: "trash.circle.fill",
                         color: .purple,
-                        isSelected: settings.saveFolderPath.contains("T/PastScreen") || settings.saveFolderPath.contains("/tmp/"),
+                        isSelected: settings.saveFolderPath.contains("/Pictures/PastScreen"),
                         action: {
-                            let tempPath = NSTemporaryDirectory() + "PastScreen/"
-                            settings.saveFolderPath = tempPath
+                            let autocleanPath = NSHomeDirectory() + "/Pictures/PastScreen/"
+                            settings.saveFolderPath = autocleanPath
                             settings.saveToFile = true
                         }
                     )
@@ -441,7 +441,7 @@ struct OnboardingContentView: View {
                         description: NSLocalizedString("onboarding.storage.custom.desc", comment: ""),
                         icon: "folder.circle.fill",
                         color: .blue,
-                        isSelected: !settings.saveFolderPath.contains("T/PastScreen") && !settings.saveFolderPath.contains("/tmp/"),
+                        isSelected: !settings.saveFolderPath.contains("/Pictures/PastScreen"),
                         action: {
                             if let path = settings.selectFolder() {
                                 settings.saveFolderPath = path

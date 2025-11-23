@@ -110,8 +110,8 @@ class AppSettings: ObservableObject {
         // Load saved values or use defaults
         self.saveToFile = UserDefaults.standard.object(forKey: "saveToFile") as? Bool ?? true  // Changed default to true
 
-        // Default to temp directory (cleared on reboot) for "jetable" workflow
-        let defaultPath = NSTemporaryDirectory() + "PastScreen/"
+        // Default to Pictures/PastScreen (auto-cleaned on app restart)
+        let defaultPath = NSHomeDirectory() + "/Pictures/PastScreen/"
         self.saveFolderPath = UserDefaults.standard.string(forKey: "saveFolderPath") ?? defaultPath
 
         self.imageFormat = UserDefaults.standard.string(forKey: "imageFormat") ?? "png"
@@ -150,7 +150,7 @@ class AppSettings: ObservableObject {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
-        panel.prompt = "Sélectionner"
+        panel.prompt = "Select"
         panel.message = "Please select a folder to save screenshots"
 
         if panel.runModal() == .OK {

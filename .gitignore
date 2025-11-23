@@ -98,3 +98,6 @@ README.md
 
 # Local comparison assets
 screen/
+
+.gemini/
+gha-creds-*.json

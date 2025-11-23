@@ -186,6 +186,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         #else
         NSLog("ℹ️ [APP] Running App Store build - Sparkle disabled")
         #endif
+
+        // Auto-cleanup if using Pictures/PastScreen folder
+        if settings.saveFolderPath.contains("/Pictures/PastScreen") {
+            settings.clearSaveFolder()
+            NSLog("🧹 [APP] Auto-cleanup on launch for Pictures/PastScreen folder")
+        }
     }
 
     @objc func handleScreenshotCaptured(_ notification: Notification) {
