@@ -423,30 +423,32 @@ struct OnboardingContentView: View {
                 .padding(.top, 24)
             } else if currentPage == .autoCleanup {
                 VStack(spacing: 16) {
+                    // Option 1: Default (Pictures) - Requires Permission
                     storageOption(
-                        title: NSLocalizedString("onboarding.storage.temp.title", comment: ""),
-                        description: NSLocalizedString("onboarding.storage.temp.desc", comment: ""),
-                        icon: "trash.circle.fill",
-                        color: .purple,
-                        isSelected: settings.saveFolderPath.contains("/Pictures/PastScreen"),
-                        action: {
-                            let autocleanPath = NSHomeDirectory() + "/Pictures/PastScreen/"
-                            settings.saveFolderPath = autocleanPath
-                            settings.saveToFile = true
-                        }
-                    )
-
-                    storageOption(
-                        title: NSLocalizedString("onboarding.storage.custom.title", comment: ""),
-                        description: NSLocalizedString("onboarding.storage.custom.desc", comment: ""),
+                        title: NSLocalizedString("onboarding.storage.default.title", comment: ""),
+                        description: NSLocalizedString("onboarding.storage.default.desc", comment: ""),
                         icon: "folder.circle.fill",
                         color: .blue,
-                        isSelected: !settings.saveFolderPath.contains("/Pictures/PastScreen"),
+                        isSelected: !settings.saveFolderPath.contains("T/PastScreen") && !settings.saveFolderPath.contains("/tmp/"),
                         action: {
                             if let path = settings.selectFolder() {
                                 settings.saveFolderPath = path
                                 settings.saveToFile = true
                             }
+                        }
+                    )
+
+                    // Option 2: Temp (Auto-Clean)
+                    storageOption(
+                        title: NSLocalizedString("onboarding.storage.temp.title", comment: ""),
+                        description: NSLocalizedString("onboarding.storage.temp.desc", comment: ""),
+                        icon: "trash.circle.fill",
+                        color: .purple,
+                        isSelected: settings.saveFolderPath.contains("T/PastScreen") || settings.saveFolderPath.contains("/tmp/"),
+                        action: {
+                            let tempPath = NSTemporaryDirectory() + "PastScreen/"
+                            settings.saveFolderPath = tempPath
+                            settings.saveToFile = true
                         }
                     )
                 }

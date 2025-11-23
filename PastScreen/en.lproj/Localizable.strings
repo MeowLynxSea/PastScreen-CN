@@ -115,11 +115,11 @@
 "onboarding.page2.title" = "Storage Location";
 "onboarding.page2.description" = "Choose where PastScreen saves your screenshots.";
 
-"onboarding.storage.temp.title" = "Auto-Clean (Pictures)";
-"onboarding.storage.temp.desc" = "Saves to Pictures/PastScreen.\nAuto-cleaned on app restart.";
+"onboarding.storage.default.title" = "Pictures Folder (Default)";
+"onboarding.storage.default.desc" = "Save to your Pictures folder.\n(Requires permission)";
 
-"onboarding.storage.custom.title" = "Custom Folder";
-"onboarding.storage.custom.desc" = "Keep your files permanently.\nSelect a folder (e.g. Pictures).";
+"onboarding.storage.temp.title" = "Temporary (Auto-Clean)";
+"onboarding.storage.temp.desc" = "Perfect for quick copy/paste.\nFiles deleted on restart.";
 
 "onboarding.page3.title" = "Direct Clipboard";
 "onboarding.page3.description" = "Automatic clipboard copy.\nPerfect for Cursor, VSCode, Zed.";

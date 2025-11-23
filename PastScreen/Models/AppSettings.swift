@@ -106,6 +106,10 @@ class AppSettings: ObservableObject {
         set { UserDefaults.standard.set(newValue, forKey: "saveFolderBookmark") }
     }
 
+    var hasValidBookmark: Bool {
+        return saveFolderBookmark != nil
+    }
+
     private init() {
         // Load saved values or use defaults
         self.saveToFile = UserDefaults.standard.object(forKey: "saveToFile") as? Bool ?? true  // Changed default to true

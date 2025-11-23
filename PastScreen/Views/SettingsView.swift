@@ -255,10 +255,14 @@ struct StorageSettingsView: View {
                         Toggle("Save to Disk", isOn: $settings.saveToFile)
                             .onChange(of: settings.saveToFile) { _, newValue in
                                 if newValue {
-                                    // Prompt if using temp dir
-                                    if settings.saveFolderPath.contains(NSTemporaryDirectory()) ||
-                                       settings.saveFolderPath.contains("/T/PastScreen") ||
-                                       settings.saveFolderPath.contains("/tmp/") {
+                                    // Check for temp path OR default Pictures path without bookmark permission
+                                    let isTemp = settings.saveFolderPath.contains(NSTemporaryDirectory()) ||
+                                                 settings.saveFolderPath.contains("/T/PastScreen") ||
+                                                 settings.saveFolderPath.contains("/tmp/")
+
+                                    let isPicturesWithoutAccess = settings.saveFolderPath.contains("Pictures/PastScreen") && !settings.hasValidBookmark
+
+                                    if isTemp || isPicturesWithoutAccess {
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                             if let newPath = settings.selectFolder() {
                                                 settings.saveFolderPath = newPath
