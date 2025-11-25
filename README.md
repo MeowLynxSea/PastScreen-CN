@@ -1,10 +1,9 @@
 # 📸 PastScreen
 **Ultra-fast, clipboard-first screenshots for developers on macOS.**
 
-[![Version](https://img.shields.io/badge/version-1.5-blue.svg)](https://github.com/augiefra/PastScreen/releases)
+[![Version](https://img.shields.io/badge/version-2.0-blue.svg)](https://github.com/augiefra/PastScreen/releases)
 [![Platform](https://img.shields.io/badge/platform-macOS%2014+-lightgrey.svg)](https://www.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org/)
-[![Sparkle](https://img.shields.io/badge/updates-Sparkle%202.8-green.svg)](https://sparkle-project.org/)
 
 > Capture any region in milliseconds, copy it directly to your clipboard, and keep coding.
 
